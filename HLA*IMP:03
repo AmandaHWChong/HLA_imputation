@@ -1,0 +1,26 @@
+HLA*IMP03 IMPUTATION
+
+#Create .HAP and .SAMPLE files for input to HLA*IMP:03 server
+
+module add apps/samtools-1.2-41
+
+vcftools --gzvcf .../chr6.dose.vcf.gz --snps hlaimp3.2.all.snps.txt --recode --keep-INFO-all --out hlaimp03.vcf.gz 
+bgzip hlaimp03.vcf.gz.recode.vcf
+bcftools view -p -T hlaimp3.all.snps.txt hlaimp03.vcf.gz.recode.vcf.gz | bcftools convert --hapsample myHLAIMP03input
+
+#Split .HAP and .SAMPLE files into chunks as imputation server only allows .HAP file <400MB 
+## Use VCFTOOLs and load perl to use vcf-subset
+module load apps/vcftools-0.1.17.0
+export PERL5LIB=/path/to/your/vcftools-directory/src/perl/ #Add Perl modules to use vcf-subset option 
+
+##Split sample file into x files
+split -l 500 myfile segment #split file by 500-line files
+
+##Subset VCF file by list of sample IDs 
+cat hlaimp03.vcf.gz.recode.vcf | vcf-subset -c input_subsetted_samplefile > out.vcf
+
+##Remove cohort ID names and replace individual IDs with list of sequential numbers
+awk '$1=NR' OFS="\t" file #Replace column 1 with 1,2,3,4,5..)
+
+#Create file with sequential numbers relating to individual ID names 
+
