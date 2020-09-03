@@ -22,5 +22,31 @@ cat hlaimp03.vcf.gz.recode.vcf | vcf-subset -c input_subsetted_samplefile > out.
 ##Remove cohort ID names and replace individual IDs with list of sequential numbers
 awk '$1=NR' OFS="\t" file #Replace column 1 with 1,2,3,4,5..)
 
-#Create file with sequential numbers relating to individual ID names 
+##Create file with sequential numbers relating to individual ID names 
+*Example*
+1 1ID
+2 2ID  
+3 3ID 
+
+##After input files are put through the HLA*IMP:03 imputation server, download outputs 
+
+##Concatinate imputations_XXX.csv files  
+sed -i '1d' input file #remove first line header of all files except the first file with IDs starting with 1) 
+
+cat imputation_aa.csv imputation_ab.csv imputation_ac.csv imputation_ad.csv imputation.ae.csv > imputation_all
+
+wc -l imputation_all #check number of individuals is correct 
+
+##Format imputation file to convert from long to wide. 
+awk '{print $4" "$1"_"$3" "$$6}' > imputation_formatted #Create new file with columns 'locus', merged column 'ID_1' and 'haplotypeID', and 'posteriorProbability'
+
+##Convert from long to wide in R session 
+imputation_formatted <- read.table("imputation_formatted", header = T, stringsAsFactors = F)
+wide <- reshape(imputation_formatted, idvar = "locus", timevar = "ID_1_haplotypeID", v.names = "posteriorProbability", direction = "wide")
+write.table(wide, "imputation_wide", sep="\t",col.names=T,row.names=F,quote=F)
+
+##Change proxy ID numbers to cohort ID numbers 
+
+
+
 
