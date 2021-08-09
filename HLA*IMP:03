@@ -16,7 +16,7 @@ export PERL5LIB=/path/to/your/vcftools-directory/src/perl/ #Add Perl modules to 
 ##Split sample file into x files
 split -l 500 myfile segment #split file by 500-line files
 
-##Subset VCF file by list of sample IDs 
+##Subset VCF file by list of ALSPAC ALNQLET IDS 
 cat hlaimp03.vcf.gz.recode.vcf | vcf-subset -c input_subsetted_samplefile > out.vcf
 
 ##Remove cohort ID names and replace individual IDs with list of sequential numbers
@@ -43,9 +43,10 @@ awk '{print $4" "$1"_"$3" "$$6}' > imputation_formatted #Create new file with co
 ##Convert from long to wide in R session 
 imputation_formatted <- read.table("imputation_formatted", header = T, stringsAsFactors = F)
 wide <- reshape(imputation_formatted, idvar = "locus", timevar = "ID_1_haplotypeID", v.names = "posteriorProbability", direction = "wide")
-write.table(wide, "imputation_wide", sep="\t",col.names=T,row.names=F,quote=F)
+write.table(wide, "ALSPAC_G0_G1_HLAIMP03_HLAantigens.dosage", sep="\t",col.names=T,row.names=F,quote=F)
 
-##Change proxy ID numbers to cohort ID numbers 
+##Change proxy ID numbers to ALSPAC ALNQLET IDS 
+
 
 
 
