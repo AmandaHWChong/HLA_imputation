@@ -30,7 +30,7 @@ awk '$1=NR' OFS="\t" file #Replace column 1 with 1,2,3,4,5..)
 
 ##After input files are put through the HLA*IMP:03 imputation server, download outputs 
 
-##Concatinate imputations_XXX.csv files  
+##Concatenate imputations_XXX.csv files  
 sed -i '1d' input file #remove first line header of all files except the first file with IDs starting with 1) 
 
 cat imputation_aa.csv imputation_ab.csv imputation_ac.csv imputation_ad.csv imputation.ae.csv > imputation_all
